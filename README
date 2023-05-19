@@ -14,6 +14,7 @@
 <a id="1."></a>
 ## 1. 소개 
 (다음 step 진행 후 업데이트 할 예정입니다.)
+
 <br>
 
 <a id="2."></a>
@@ -99,7 +100,7 @@
 
 <a id="7."></a> 
 ## 7. 참고 링크
-- [API Design Guideline - Strive for Fluent Usage](https://www.swift.org/documentation/api-design-guidelines/#promote-clear-usage)
+- [API Design Guideline - Strive for Fluent Usage] (https://www.swift.org/documentation/api-design-guidelines/#promote-clear-usage)
 - [APPLE Developer - Hashable](https://developer.apple.com/documentation/swift/hashable)
 - [블로그 - Hashable](https://babbab2.tistory.com/149)
 - [Docs.swift - Properties - static](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/properties/)
