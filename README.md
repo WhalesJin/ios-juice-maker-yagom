@@ -1,4 +1,5 @@
 # 🥭 머쨍이 웨일의 쥬스메이커 🍹
+
 <br>
 
 ## 목차
@@ -100,7 +101,7 @@
 
 <a id="7."></a> 
 ## 7. 참고 링크
-- [API Design Guideline - Strive for Fluent Usage] (https://www.swift.org/documentation/api-design-guidelines/#promote-clear-usage)
+- [API Design Guideline - Strive for Fluent Usage](https://www.swift.org/documentation/api-design-guidelines/#promote-clear-usage)
 - [APPLE Developer - Hashable](https://developer.apple.com/documentation/swift/hashable)
 - [블로그 - Hashable](https://babbab2.tistory.com/149)
 - [Docs.swift - Properties - static](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/properties/)
