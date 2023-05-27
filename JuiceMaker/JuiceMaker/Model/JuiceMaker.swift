@@ -5,7 +5,7 @@
 // 
 
 struct JuiceMaker {
-    var fruitStore: FruitStore = FruitStore()
+    private var fruitStore: FruitStore = FruitStore() // 메서드로만 움직여서 은닉화 가능.
     
     func readFruitInventory() -> [Fruit: Int] {
         return fruitStore.readFruitInventory()
@@ -26,5 +26,13 @@ struct JuiceMaker {
         for (fruit, amount) in juice.recipe {
             fruitStore.decreaseFruitStock(fruit, by: amount)
         }
+    }
+    
+//    func changeFruitStock(_ fruit: Fruit, amount: Int) {
+//        fruitStore.changeFruitStock(fruit, by: amount)
+//    }
+    
+    func changeFruitInventory(_ changedInventory: [Fruit: Int]) {
+        fruitStore.changeFruitInventory(changedInventory)
     }
 }

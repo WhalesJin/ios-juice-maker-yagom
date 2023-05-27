@@ -14,96 +14,108 @@ class StockChangeViewController: UIViewController {
     @IBOutlet private weak var kiwiStockLabel: UILabel!
     @IBOutlet private weak var mangoStockLabel: UILabel!
     
-    @IBOutlet weak var closeButton: UIBarButtonItem!
+    @IBOutlet private weak var closeButton: UIBarButtonItem!
     
-    @IBOutlet weak var strawberryStockStepper: UIStepper!
-    @IBOutlet weak var bananaStockStepper: UIStepper!
-    @IBOutlet weak var pineappleStockStepper: UIStepper!
-    @IBOutlet weak var kiwiStockStepper: UIStepper!
-    @IBOutlet weak var mangoStockStepper: UIStepper!
+    @IBOutlet private weak var strawberryStockStepper: UIStepper!
+    @IBOutlet private weak var bananaStockStepper: UIStepper!
+    @IBOutlet private weak var pineappleStockStepper: UIStepper!
+    @IBOutlet private weak var kiwiStockStepper: UIStepper!
+    @IBOutlet private weak var mangoStockStepper: UIStepper!
     
-    var fruitStore: FruitStore = FruitStore()
+    weak var delegate: Exchangeable?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureStockLabel()
+        configureComponents()
     }
     
-    func configureStockLabel() {
-        let fruitInventory = fruitStore.readFruitInventory()
-        
-        guard let strawberryStock = fruitInventory[.strawberry],
-              let bananaStock = fruitInventory[.banana],
-              let pineappleStock = fruitInventory[.pineapple],
-              let kiwiStock = fruitInventory[.kiwi],
-              let mangoStock = fruitInventory[.mango]
-        else {
+    func configureComponents() {
+        guard let fruitCurrentInvetory = delegate?.takeCurrentInventory() else {
             return
         }
         
-        strawberryStockLabel.text = String(strawberryStock)
-        bananaStockLabel.text = String(bananaStock)
-        pineappleStockLabel.text = String(pineappleStock)
-        kiwiStockLabel.text = String(kiwiStock)
-        mangoStockLabel.text = String(mangoStock)
+        configureStockLabel(fruitCurrentInvetory)
+        configureStepper(fruitCurrentInvetory)
+    }
+    
+    func configureStockLabel(_ fruitCurrentInvetory: [Fruit: Int]) {
+        strawberryStockLabel.text = String(fruitCurrentInvetory[.strawberry] ?? -1)
+        bananaStockLabel.text = String(fruitCurrentInvetory[.banana] ?? -1)
+        pineappleStockLabel.text = String(fruitCurrentInvetory[.pineapple] ?? -1)
+        kiwiStockLabel.text = String(fruitCurrentInvetory[.kiwi] ?? -1)
+        mangoStockLabel.text = String(fruitCurrentInvetory[.mango] ?? -1)
+    }
+    
+    func configureStepper(_ fruitCurrentInvetory: [Fruit: Int]) {
+        strawberryStockStepper.value = Double(fruitCurrentInvetory[.strawberry] ?? -1)
+        bananaStockStepper.value = Double(fruitCurrentInvetory[.banana] ?? -1)
+        pineappleStockStepper.value = Double(fruitCurrentInvetory[.pineapple] ?? -1)
+        kiwiStockStepper.value = Double(fruitCurrentInvetory[.kiwi] ?? -1)
+        mangoStockStepper.value = Double(fruitCurrentInvetory[.mango] ?? -1)
+    }
+    
+    func changeToInt(_ text: String?) -> Int {
+        guard let text = text, let convertedNumber = Int(text) else {
+            return -1
+        }
+        
+        return convertedNumber
+    }
+    
+    func changeToDouble(_ text: String?) -> Double {
+        guard let text = text, let convertedNumber = Double(text) else {
+            return -1
+        }
+        
+        return convertedNumber
     }
     
     @IBAction func didTapStockChangeStepper(_ sender: UIStepper) {
-        let fruit: Fruit
-        let stockLabel: UILabel
-        
         switch sender {
         case strawberryStockStepper:
-            fruit = .strawberry
-            stockLabel = strawberryStockLabel
+            strawberryStockLabel.text = String(Int(sender.value))
         case bananaStockStepper:
-            fruit = .banana
-            stockLabel = bananaStockLabel
+            bananaStockLabel.text = String(Int(sender.value))
         case pineappleStockStepper:
-            fruit = .pineapple
-            stockLabel = pineappleStockLabel
+            pineappleStockLabel.text = String(Int(sender.value))
         case kiwiStockStepper:
-            fruit = .kiwi
-            stockLabel = kiwiStockLabel
+            kiwiStockLabel.text = String(Int(sender.value))
         case mangoStockStepper:
-            fruit = .mango
-            stockLabel = mangoStockLabel
+            mangoStockLabel.text = String(Int(sender.value))
         default:
             return
         }
-        
-        let stock: Int = fruitStore.readFruitInventory()[fruit] ?? 0
-        let changedStock = stock + Int(sender.value)
-        stockLabel.text = String(changedStock)
     }
     
     @IBAction func didTapCloseButton(_ sender: UIBarButtonItem) {
-        let previousViewController = self.presentingViewController as? JuiceOrderViewController
+//        var fruitInventory: [Fruit: String] = [:] // 빈 배열을 메모리 위에 올리겠다.
+//
+//        if let strawberryChangedStock = strawberryStockLabel.text,
+//           let bananaChangedStock = bananaStockLabel.text,
+//           let pineappleChangedStock = pineappleStockLabel.text,
+//           let kiwiChangedStock = kiwiStockLabel.text,
+//           let mangoChangedStock = mangoStockLabel.text {
+//            fruitInventory[.strawberry] = strawberryChangedStock
+//            fruitInventory[.banana] = bananaChangedStock
+//            fruitInventory[.pineapple] = pineappleChangedStock
+//            fruitInventory[.kiwi] = kiwiChangedStock
+//            fruitInventory[.mango] = mangoChangedStock
+//
+//            delegate?.exchangeInventory(inventory: fruitInventory)
+//        }
+        // 6번의 메모리를 거칠걸 한 번에 가능(시간 복잡도 6 -> 1)
+        let strawberryChangedStock = changeToInt(strawberryStockLabel.text)
+            let bananaChangedStock = changeToInt(bananaStockLabel.text)
+            let pineappleChangedStock = changeToInt(pineappleStockLabel.text)
+            let kiwiChangedStock = changeToInt(kiwiStockLabel.text)
+            let mangoChangedStock = changeToInt(mangoStockLabel.text)
         
-        changeFruitInventory()
-        previousViewController?.fruitStore = self.fruitStore
-        
+        let fruitInventory: [Fruit: Int] = [.strawberry: strawberryChangedStock,
+                                               .banana: bananaChangedStock,
+                                               .pineapple: pineappleChangedStock,
+                                               .kiwi: kiwiChangedStock,
+                                               .mango: mangoChangedStock]
+        delegate?.exchangeInventory(inventory: fruitInventory)
         self.presentingViewController?.dismiss(animated: true)
-    }
-    
-    func changeFruitInventory() {
-        guard let strawberryChangedStock = Int(strawberryStockLabel.text ?? ""),
-              let bananaChangedStock = Int(bananaStockLabel.text ?? ""),
-              let pineappleChangedStock = Int(pineappleStockLabel.text ?? ""),
-              let kiwiChangedStock = Int(kiwiStockLabel.text ?? ""),
-              let mangoChangedStock = Int(mangoStockLabel.text ?? "")
-        else {
-            return
-        }
-        
-        changeFruitStock(.strawberry, amount: strawberryChangedStock)
-        changeFruitStock(.banana, amount: bananaChangedStock)
-        changeFruitStock(.pineapple, amount: pineappleChangedStock)
-        changeFruitStock(.kiwi, amount: kiwiChangedStock)
-        changeFruitStock(.mango, amount: mangoChangedStock)
-    }
-    
-    func changeFruitStock(_ fruit: Fruit, amount: Int) {
-        fruitStore.changeFruitStock(fruit, by: amount)
     }
 }

@@ -6,7 +6,7 @@
 
 import UIKit
 
-class JuiceOrderViewController: UIViewController {
+class JuiceOrderViewController: UIViewController, Exchangeable {
     @IBOutlet private weak var strawberryStockLabel: UILabel!
     @IBOutlet private weak var bananaStockLabel: UILabel!
     @IBOutlet private weak var pineappleStockLabel: UILabel!
@@ -24,19 +24,18 @@ class JuiceOrderViewController: UIViewController {
     @IBOutlet private weak var stockChangeButton: UIBarButtonItem!
     
     private var juiceMaker: JuiceMaker = JuiceMaker()
-    var fruitStore: FruitStore = FruitStore()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        juiceMaker.fruitStore = fruitStore
         configureStockLabel()
     }
     
-    func configureStockLabel() {
+    override func viewWillAppear(_ animated: Bool) {
+        changeFruitInventory()
+        configureStockLabel()
+    }
+    
+    func configureStockLabel() { // 언제나 최근값을 들고오면
         let fruitInventory = juiceMaker.readFruitInventory()
         
         guard let strawberryStock = fruitInventory[.strawberry],
@@ -53,22 +52,6 @@ class JuiceOrderViewController: UIViewController {
         pineappleStockLabel.text = String(pineappleStock)
         kiwiStockLabel.text = String(kiwiStock)
         mangoStockLabel.text = String(mangoStock)
-    }
-    
-    @IBAction func didTapStockChangeButton(_ sender: UIBarButtonItem) {
-        guard let nextStockChangeViewController = storyboard?.instantiateViewController(
-            identifier: "StockChangeViewController"
-        ) as? StockChangeViewController else {
-            return
-        }
-        
-        nextStockChangeViewController.fruitStore = self.juiceMaker.fruitStore
-        nextStockChangeViewController.modalPresentationStyle = .fullScreen
-        
-        self.present(
-            nextStockChangeViewController,
-            animated: true
-        )
     }
     
     @IBAction func didTapOrderButton(_ sender: UIButton) {
@@ -133,5 +116,51 @@ class JuiceOrderViewController: UIViewController {
         
         alert.addAction(closeAction)
         present(alert, animated: true, completion: nil)
+    }
+    
+    @IBAction func didTapStockChangeButton(_ sender: UIBarButtonItem) {
+        guard let nextStockChangeViewController = storyboard?.instantiateViewController(
+            identifier: "StockChangeViewController"
+        ) as? StockChangeViewController else {
+            return
+        }
+        
+        nextStockChangeViewController.delegate = self
+        nextStockChangeViewController.modalPresentationStyle = .fullScreen
+        
+        self.present(
+            nextStockChangeViewController,
+            animated: true
+        )
+    }
+    
+    func exchangeInventory(inventory: [Fruit : Int]) {
+        juiceMaker.changeFruitInventory(inventory)
+    }
+    
+    func takeCurrentInventory() -> [Fruit : Int] {
+        juiceMaker.readFruitInventory()
+    }
+    
+//    func changeFruitInventory() {
+//        let strawberryChangedStock = changeToInt(strawberryStockLabel.text)
+//        let bananaChangedStock = changeToInt(bananaStockLabel.text)
+//        let pineappleChangedStock = changeToInt(pineappleStockLabel.text)
+//        let kiwiChangedStock = changeToInt(kiwiStockLabel.text)
+//        let mangoChangedStock = changeToInt(mangoStockLabel.text)
+//
+//        juiceMaker.changeFruitStock(.strawberry, amount: strawberryChangedStock)
+//        juiceMaker.changeFruitStock(.banana, amount: bananaChangedStock)
+//        juiceMaker.changeFruitStock(.pineapple, amount: pineappleChangedStock)
+//        juiceMaker.changeFruitStock(.kiwi, amount: kiwiChangedStock)
+//        juiceMaker.changeFruitStock(.mango, amount: mangoChangedStock)
+//    }
+    
+    func changeToInt(_ text: String?) -> Int {
+        guard let text = text, let convertedNumber = Int(text) else {
+            return -1
+        }
+        
+        return convertedNumber
     }
 }
