@@ -141,5 +141,5 @@ Step2
 
 <a id="8."></a> 
 ## 📮 팀 회고
-<img width="500" alt="Dear  Whales💜" src="https://github.com/WhalesJin/ios-juice-maker-yagom/assets/124643545/aa1cf3de-9a1c-4db7-ac36-61ca4aeb6dbf">
+[<Img src = "https://hackmd.io/_uploads/H1SG_MfI3.png" width="500"/>](https://rollingpaper.site/rolls/984829)
 
