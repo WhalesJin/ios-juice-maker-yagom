@@ -141,5 +141,4 @@ Step2
 
 <a id="8."></a> 
 ## 📮 팀 회고
-[<Img src = "https://hackmd.io/_uploads/H1SG_MfI3.png" width="500"/>](https://rollingpaper.site/rolls/984829)
-
+[<Img src = "https://cdn.discordapp.com/attachments/1105114134909030500/1112724023592374325/Dear._Whales_20.png" width="400"/>](https://rollingpaper.site/rolls/984829)
